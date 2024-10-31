@@ -7,3 +7,5 @@
 
 .. toctree::
     :maxdepth: 1
+
+    simple/index.rst

@@ -21,7 +21,9 @@ $ docker build -t laravel-builder:v0 .
 
 ```bash
 # 作成したイメージでコンテナを生成し、appプロジェクトを作成
-$ docker run --name=build laravel-builder:v0 composer create-project laravel/laravel app
+$ docker run --name=build laravel-builder:v0 \
+  bash -ec "composer create-project laravel/laravel app; cd app; php artisan key:generate"
+
 # 作成したappプロジェクト(ディレクトリ)をローカルにコピー
 $ docker cp build:/app/app .
 # コンテナを削除
@@ -31,11 +33,17 @@ $ docker rm build
 これで持ち出せました。
 この状態で、以下の構造になっていることを確認してください。
 
-
 ```
 .
 ├── Dockerfile
 └── app(ディレクトリ)
+```
+
+```{note}
+コンテナ内で実行したコマンド {command}`php artisan key:generate`は、Laravelの暗号化キーを生成するためのものです。
+この操作は、Laravelのセキュリティに関わるものであり、実際の運用時にも必要になります。
+
+このキーは、{command}`composer create-project`の操作で {file}`.env`に作成されるはずですが、作成されない場合もあるため、意図的に実行して生成させています。
 ```
 
 次は、Laravelのプロジェクトが走らせられるよう、Dockerfileを修正します。
@@ -239,4 +247,75 @@ $ docker run --rm --name=laravel-app -p 8000:8000 laravel-app:v0
 
 ```{figure} images/laravel-app.png
 ブラウザで確認した結果
+```
+
+# リポジトリに上げておこう
+
+こうやって作ったappのディレクトリは、今後の作業のためにリポジトリに上げておくようにしましょう。
+
+## ローカルでのリポジトリ作成
+
+```bash
+$ cd app
+$ git init
+$ git add .
+$ git commit -m "Initial commit"
+```
+
+## リモートリポジトリの作成、登録、プッシュ
+
+リポジトリを作成したら、リモートリポジトリを作成して登録しておきましょう。
+
+1. [GitHub](https://github.com)をブラウザで呼び出す
+2. 新規リポジトリの作成を選ぶ(青い {menuselection}`New` ボタンをクリック)
+3. 適当な名前でリポジトリを作成する、なお今回は**パブリックリポジトリ**にしておいてください(ここ地味に重要)
+4. 作成後、リポジトリのURLをクリップボードにコピーしておいてください
+
+次にローカルリポジトリを登録します。
+
+```bash
+$ git remote add origin <取得したリポジトリのURL>
+```
+
+そして、プッシュします。
+
+```bash
+$ git push -u origin master
+```
+
+これでブラウザで表示しているリポジトリページを見に行くと、先程のコミットが反映されてソースが入っているはずです。
+ただし、Laravel環境の初期設定により、`vendor`ディレクトリや`database/database.sqlite`は含まれておりません(これで正解)。
+
+# Docker Hubへのプッシュ
+
+そして、作成したイメージをDocker Hubにもプッシュしましょう。
+この後K8sで利用する際に、Docker Hubからイメージを取得することになるためです。
+イメージ名は `<ユーザー名>/laravel-app:v0` としておきましょう。
+
+```bash
+$ docker build -t <ユーザー名>/laravel-app:v0 .
+$ docker push <ユーザー名>/laravel-app:v0
+```
+
+```{figure} images/push-to-docker.png
+Docker Hubにプッシュ中の様子
+```
+
+# せっかちさんへ
+
+今回の操作で作っているLaravelのプロジェクトについては、以下のリポジトリにて公開しています。
+
+- [kd-it/2024-as2-laravel-example](https://github.com/kd-it/2024-as2-laravel-example.git)
+
+{file}`Dockerfile` を作成しているディレクトリにて、以下の操作を行えば、このリポジトリをクローンして、そのまま動かすことができます。
+
+```bash
+$ git clone https://github.com/kd-it/2024-as2-laravel-example.git app
+$ cd app
+$ cp .env.example .env # .envは公開対象ではないため含まれていません、この作業で作成してください
+$ cd ..
+```
+
+```{note}
+Windows環境の方は {command}`cp`の代わりに {command}`copy`を使ってください
 ```

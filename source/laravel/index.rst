@@ -8,4 +8,6 @@
 .. toctree::
     :maxdepth: 1
 
-    simple/index.rst
+    simple/index
+    simple/simple-deployment.md
+    separation/index.rst

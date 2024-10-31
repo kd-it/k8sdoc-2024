@@ -1,0 +1,55 @@
+# データベース部分のマニフェスト
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  selector:
+    matchLabels:
+      app: db
+  serviceName: db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: mysql:9.1
+        ports:
+        - containerPort: 3306
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/mysql
+        env:
+        - name: MYSQL_RANDOM_ROOT_PASSWORD
+          value: "true"
+        - name: MYSQL_DATABASE
+          value: laravelapp
+        - name: MYSQL_USER
+          value: 'appuser'
+        - name: MYSQL_PASSWORD
+          value: 'apppass'
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - |
+              mysqladmin -u $MYSQL_USER --password=$MYSQL_PASSWORD -h localhost ping
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 1
+  volumeClaimTemplates:
+  - metadata:
+      name: db-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-app
+spec:
+  selector:
+    matchLabels:
+      app: laravel-app
+  template:
+    metadata:
+      labels:
+        app: laravel-app
+    spec:
+      containers:
+      - name: laravel-app
+        # イメージ名は各自のユーザー名等にあわせて書き換えてください
+        image: densukest/laravel-app:v1
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: dotenv
+          mountPath: /app/.env
+          subPath: .env
+          readOnly: true
+
+      volumes:
+      - name: dotenv
+        configMap:
+          name: dotenv

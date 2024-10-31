@@ -1,0 +1,25 @@
+# ConfigMap/dotenvをマウントしてどのように見えるかを観察するだけのPod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cmview
+  labels:
+    name: cmview
+spec:
+  containers:
+  - name: cmview
+    image: alpine
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    command: [ "sleep", "infinity" ]
+    volumeMounts:
+    - name: cm
+      mountPath: /tmp/dotenv
+      subPath: .env
+      readOnly: true
+  volumes:
+  - name: cm
+    configMap:
+      name: dotenv

@@ -22,6 +22,7 @@ Kubernetes体験
    network/index
    probe/index
    sidecar/index
+   laravel/index
 
 
 本ドキュメントの公開方法

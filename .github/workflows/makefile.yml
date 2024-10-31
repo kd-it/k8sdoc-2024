@@ -28,16 +28,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: true
 
     - name: Install the latest version of rye
       uses: eifinger/setup-rye@v4
-  
+
     - name: Install dependencies
       run: make init
 
     - name: Run build html
       run: make html
-  
+
 
     - name: Setup Pages
       uses: actions/configure-pages@v5

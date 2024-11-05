@@ -23,6 +23,7 @@ Kubernetes体験
    probe/index
    sidecar/index
    #laravel/index
+   kd-laravel/index
 
 
 本ドキュメントの公開方法

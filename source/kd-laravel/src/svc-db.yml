@@ -1,0 +1,13 @@
+# ClusterIPを用いたサービスdb
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  selector:
+    app: db
+  ports:
+  - port: 3306
+    targetPort: 3306
+  type: ClusterIP

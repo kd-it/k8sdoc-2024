@@ -16,5 +16,5 @@ Laravel環境をK8sで走らせるとしたら
     structure.md
     db.md
     app.md
-    web.md
+    #web.md
 

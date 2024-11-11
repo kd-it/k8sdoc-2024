@@ -1,3 +1,6 @@
 [submodule "source/laravel/simple/src/app"]
 	path = source/laravel/simple/src/app
 	url = https://github.com/kd-it/2024-as2-laravel-example.git
+[submodule "source/kd-laravel/src/sampleapp"]
+	path = source/kd-laravel/src/sampleapp
+	url = https://github.com/kd-it/sampleapp.git

@@ -15,4 +15,6 @@ Laravel環境をK8sで走らせるとしたら
     images.md
     structure.md
     db.md
+    app.md
+    web.md
 

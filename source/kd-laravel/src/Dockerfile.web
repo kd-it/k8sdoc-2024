@@ -1,0 +1,5 @@
+# 指定のベースイメージをベースとして、
+# sampleapp/publicディレクトリを/app/publicとしてコピーする
+FROM ghcr.io/kd-it/php-devcontainer/web:1729810621
+COPY sampleapp/public /app/public
+RUN chown -R vscode:vscode /app/public

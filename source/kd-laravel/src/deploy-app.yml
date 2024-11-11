@@ -1,0 +1,26 @@
+# app部分のマニフェスト
+# ファイル保存の可能性はありますがデプロイメントで設定しています
+# php-fpmベースのため、9000/tcpで接続受け付け状態としています
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: ghcr.io/kd-it/php-devcontainer/app:1729810622
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 9000

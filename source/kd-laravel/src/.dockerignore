@@ -1,0 +1,4 @@
+/sampleapp/vendor
+/sampleapp/database/database.sqlite
+/sampleapp/storage/logs
+!/sampleapp/storage/logs/.gitignore

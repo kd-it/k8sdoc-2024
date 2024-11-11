@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: densukest/app:in-v1
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 9000
+      initContainers:
+      - name: init
+        image: densukest/app:in-v1
+        # 同じイメージを使っているので同じコードが入っているはず
+        command: ["php", "artisan", "migrate"]
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
